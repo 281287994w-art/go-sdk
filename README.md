@@ -154,7 +154,7 @@ if err != nil {
 defer client.CloseWebSocket()
 
 // 发送订阅消息
-subscribeMsg := []byte(`{"action": "subscribe", "codes": ["EURUSD"]}`)
+subscribeMsg := []byte(`{"ac": "subscribe", "params": "EURUSD$gb","types":"quote"}`)
 err = client.SendWebSocketMessage(subscribeMsg)
 if err != nil {
     log.Fatal(err)
@@ -338,7 +338,7 @@ func main() {
     defer client.CloseWebSocket()
 
     // 发送订阅消息
-    subscribeMsg := []byte(`{"action": "subscribe", "codes": ["EURUSD"]}`)
+    subscribeMsg := []byte(`{"ac": "subscribe", "params": "EURUSD$gb","types":"quote"}`)
     err = client.SendWebSocketMessage(subscribeMsg)
     if err != nil {
         log.Fatal(err)
