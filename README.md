@@ -15,7 +15,7 @@ Go 语言版本的 iTick API SDK，提供基础、股票、指数、期货、基
 ## 安装
 
 ```bash
-go get github.com/itick-org/go-sdk@latest
+go get -u github.com/itick-org/go-sdk@latest
 ```
 
 ## 快速开始
