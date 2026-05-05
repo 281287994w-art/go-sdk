@@ -1,6 +1,6 @@
 package sdk
 
-type Reponse[T Tick] struct {
+type Reponse[T Tick | Quote | Kline | Depth] struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data T      `json:"data"`
