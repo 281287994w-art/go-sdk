@@ -165,7 +165,6 @@ func (c *Client) Subscribe(symbols []string, types []string) error {
 
 	subStr := fmt.Sprintf(`{"ac": "subscribe", "params": "%s","types":"%s"}`, strings.Join(subSymbols, ","), strings.Join(subTypes, ","))
 
-	fmt.Printf("%s\n", subStr)
 	subscribeMsg := []byte(subStr)
 
 	err := c.SendWebSocketMessage(subscribeMsg)
