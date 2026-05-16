@@ -183,16 +183,30 @@ client.SetErrorHandler(func(err error) {
 #### 连接和订阅
 
 ```go
-// 连接外汇 WebSocket
-err := client.ConnectForexWebSocket()
+// open global reconnect task
+sdk.StartGlobalReconnect()
+// close global reconnect taskß
+defer sdk.CloseGlobalReconnect()
+
+// 设置 WebSocket 消息处理器
+client.SetMessageHandler(func(message []byte) {
+    fmt.Printf("clientId:%s, Received WebSocket message: %s\n", clientId, message)
+})
+
+// 设置 WebSocket 错误处理器
+client.SetErrorHandler(func(err error) {
+    log.Printf("clientId:%s WebSocket error: %v\n", clientId, err)
+})
+
+// 连接加密货币 WebSocket
+err := client.ConnectCryptoWebSocket()
 if err != nil {
     log.Fatal(err)
 }
 defer client.CloseWebSocket()
 
-// 发送订阅消息
-subscribeMsg := []byte(`{"ac": "subscribe", "params": "EURUSD$gb","types":"quote"}`)
-err = client.SendWebSocketMessage(subscribeMsg)
+// 订阅产品
+err = client.Subscribe([]string{"BTCUSDT$ba"}, []string{"quote", "tick"})
 if err != nil {
     log.Fatal(err)
 }
@@ -210,8 +224,8 @@ fmt.Printf("WebSocket connected: %v\n", client.IsWebSocketConnected())
 // 连接股票 WebSocket
 err := client.ConnectStockWebSocket()
 
-// 连接加密货币 WebSocket
-err := client.ConnectCryptoWebSocket()
+// 连接外汇 WebSocket
+err := client.ConnectForexWebSocket()
 ```
 
 ## API 接口列表
@@ -367,22 +381,22 @@ func main() {
     }
     fmt.Printf("Forex Tick: %+v\n", tick)
 
-    // 测试 WebSocket
-    err = client.ConnectForexWebSocket()
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer client.CloseWebSocket()
+    err := client.ConnectCryptoWebSocket()
+	if err != nil {
+		log.Printf("ConnectForexWebSocket error: %v", err)
+		// Continue even if WebSocket fails
+	} else {
+		// defer client.CloseWebSocket()
 
-    // 发送订阅消息
-    subscribeMsg := []byte(`{"ac": "subscribe", "params": "EURUSD$gb","types":"quote"}`)
-    err = client.SendWebSocketMessage(subscribeMsg)
-    if err != nil {
-        log.Fatal(err)
-    }
+		// 发送订阅消息
+		err = client.Subscribe([]string{"BTCUSDT$ba"}, []string{"quote", "tick"})
+		if err != nil {
+			log.Printf("Subscribe error: %v", err)
+		}
 
-    // 等待接收消息
-    time.Sleep(10 * time.Second)
+		// 等待接收消息
+		fmt.Println("Waiting for WebSocket messages...")
+		time.Sleep(10 * time.Second)
 }
 ```
 
