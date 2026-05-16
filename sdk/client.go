@@ -234,7 +234,7 @@ func (c *Client) connectWebSocket() error {
 	url := WSSURL + c.wsPath
 
 	dialer := websocket.Dialer{
-		HandshakeTimeout: 10 * time.Second, // 设置握手超时时间为30秒
+		HandshakeTimeout: 30 * time.Second, // 设置握手超时时间为30秒
 		ReadBufferSize:   1024,
 		WriteBufferSize:  1024,
 	}
@@ -273,7 +273,7 @@ func (c *Client) pingLoop() {
 		case <-ticker.C:
 			c.wsPingMutex.Lock()
 			if c.wsClient != nil && c.wsConnected.Load() {
-				c.wsClient.SetWriteDeadline(time.Now().Add(10 * time.Second))
+				c.wsClient.SetWriteDeadline(time.Now().Add(20 * time.Second))
 				err := c.wsClient.WriteMessage(websocket.PingMessage, []byte{})
 				if err != nil {
 					c.wsConnected.Store(false)
